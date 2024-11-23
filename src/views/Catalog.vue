@@ -27,7 +27,6 @@
           <p class="text-sm">{{ book.author }}</p>
 
           <div class="flex">
-            <i class="bi bi-star-fill"></i>
             <p class="text-sm">{{ book.rating.average }}</p>
           </div>
         </div>
