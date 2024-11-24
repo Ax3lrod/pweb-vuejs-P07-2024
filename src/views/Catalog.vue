@@ -37,22 +37,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
-
-type Book = {
-  title: string;
-  author: string;
-  publishedDate: string;
-  publisher: string;
-  description: string;
-  coverImage: string;
-  rating: {
-    average: number;
-    count: number;
-  };
-  tags: string[];
-  initialQty: number;
-  qty: number;
-};
+import type { Book } from "@/types/Book";
 
 const isLoading = ref(true);
 const books = ref<Book[]>([]);

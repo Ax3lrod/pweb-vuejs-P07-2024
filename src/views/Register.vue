@@ -119,7 +119,12 @@ const handleRegister = async () => {
     const data = await response.json();
     alert("Registration successful! You can now log in.");
   } catch (error) {
-    alert(error.message);
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      console.error("An unexpected error occurred:", error);
+      alert("An unexpected error occurred. Please try again.");
+    }
   }
 };
 </script>

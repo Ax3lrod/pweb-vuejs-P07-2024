@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 const username = ref("");
 const password = ref("");
@@ -85,7 +85,12 @@ const handleLogin = async () => {
 
     router.push("/catalog");
   } catch (error) {
-    alert(error.message);
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      console.error("An unexpected error occurred:", error);
+      alert("An unexpected error occurred. Please try again.");
+    }
   }
 };
 </script>
