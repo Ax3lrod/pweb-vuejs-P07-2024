@@ -58,7 +58,6 @@ const username = ref("");
 const password = ref("");
 
 const router = useRouter();
-const route = useRoute();
 
 const handleLogin = async () => {
   try {

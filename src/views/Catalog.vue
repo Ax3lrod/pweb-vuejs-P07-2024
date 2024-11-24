@@ -11,7 +11,7 @@
       >
         Loading...
       </h1>
-      <template v-for="book in books" :key="book._id">
+      <template v-for="book in books" :key="book.title">
         <div
           class="w-[300px] h-[400px] p-5 bg-white border-2 rounded-md border-black drop-shadow-lg justify-self-center"
         >
@@ -23,9 +23,7 @@
             />
           </div>
           <h1 class="font-bold text-xl">{{ book.title }}</h1>
-
           <p class="text-sm">{{ book.author }}</p>
-
           <div class="flex">
             <p class="text-sm">{{ book.rating.average }}</p>
           </div>
@@ -39,9 +37,25 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
-const isLoading = ref(true);
 
-const books = ref([]);
+type Book = {
+  title: string;
+  author: string;
+  publishedDate: string;
+  publisher: string;
+  description: string;
+  coverImage: string;
+  rating: {
+    average: number;
+    count: number;
+  };
+  tags: string[];
+  initialQty: number;
+  qty: number;
+};
+
+const isLoading = ref(true);
+const books = ref<Book[]>([]);
 const router = useRouter();
 
 const fetchBooks = async () => {
@@ -66,12 +80,12 @@ const fetchBooks = async () => {
       throw new Error("Failed to fetch books.");
     }
 
-    const data = await response.json();
+    const data: Book[] = await response.json();
     books.value = data;
-    isLoading.value = false;
   } catch (error) {
-    console.error(error.message);
     alert("An error occurred while fetching books.");
+  } finally {
+    isLoading.value = false;
   }
 };
 
