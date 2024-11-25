@@ -2,9 +2,9 @@
   <section
     class="top-0 w-full fit flex items-center bg-teal-700 text-white p-5 px-5"
   >
-    <div class="w-1/2 flex justify-start items-center">
+    <router-link to="/catalog" class="w-1/2 flex justify-start items-center">
       <h1 class="font-bold text-xl">PerpusIT</h1>
-    </div>
+    </router-link>
     <div class="w-1/2 flex justify-end items-center relative">
       <button @click="toggleDropdown">
         <span v-if="username" class="text-lg font-medium"

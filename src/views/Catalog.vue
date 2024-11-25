@@ -1,19 +1,16 @@
 <template>
   <Navbar />
-  <main class="w-full min-h-screen flex-col items-center justify-center">
-    <h1 class="font-bold text-4xl lg:text-6xl text-center text-white">
-      Katalog Buku
+  <main class="w-full min-h-screen flex-col items-center justify-center pt-20">
+    <h1 v-if="isLoading" class="font-bold text-xl text-center w-full">
+      Loading...
     </h1>
-    <section class="flex flex-wrap gap-5 items-center w-full p-5">
-      <h1
-        v-if="isLoading"
-        class="font-bold text-xl text-center justify-self-center w-full"
-      >
-        Loading...
-      </h1>
+    <section
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 w-full p-5 justify-items-center"
+    >
       <template v-for="book in books" :key="book.title">
         <div
-          class="w-[300px] h-[400px] p-5 bg-white border-2 rounded-md border-black drop-shadow-lg justify-self-center"
+          @click="goToBookDetail(book._id)"
+          class="cursor-pointer w-[300px] h-[400px] p-5 bg-white border-2 rounded-md border-black drop-shadow-lg hover:scale-105 transition-transform"
         >
           <div class="w-full h-4/5 rounded-md">
             <img
@@ -22,10 +19,10 @@
               class="w-full h-full object-cover rounded-md"
             />
           </div>
-          <h1 class="font-bold text-xl">{{ book.title }}</h1>
+          <h1 class="font-bold text-xl truncate">{{ book.title }}</h1>
           <p class="text-sm">{{ book.author }}</p>
           <div class="flex">
-            <p class="text-sm">{{ book.rating.average }}</p>
+            <p class="text-sm">⭐{{ book.rating.average }}</p>
           </div>
         </div>
       </template>
@@ -72,6 +69,10 @@ const fetchBooks = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const goToBookDetail = (_id: string) => {
+  router.push(`/book/${_id}`);
 };
 
 onMounted(() => {
