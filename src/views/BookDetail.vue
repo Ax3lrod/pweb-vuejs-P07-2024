@@ -1,25 +1,34 @@
 <template>
   <Navbar />
-  <main class="w-full h-fit flex justify-center pt-10">
-    <section class="w-[40%] flex justify-center">
-      <div class="w-[300px] h-[400px]">
+  <h1 v-if="isLoading" class="font-bold text-xl text-center w-full">
+    Loading...
+  </h1>
+  <main
+    class="w-full h-fit flex lg:flex-row flex-col items-center justify-center pt-10"
+    v-if="!isLoading"
+  >
+    <section class="w-full lg:w-[40%] flex justify-center">
+      <div class="w-[300px] h-[400px] overflow-hidden rounded-md">
         <img
           :src="book?.coverImage"
           alt="Book Cover"
-          class="w-full h-full object-cover rounded-md border-8 border-black"
+          class="w-full h-full object-cover rounded-md border-2 border-black hover:scale-110 transition-transform duration-300 ease-in-out"
         />
       </div>
     </section>
-    <section class="w-[60%] flex flex-col items-start">
+    <section
+      class="w-full lg:w-[60%] flex flex-col items-center lg:items-start gap-2"
+    >
       <h1 class="font-bold text-4xl mt-5">{{ book?.title }}</h1>
       <p class="text-lg">By {{ book?.author }}</p>
       <p class="text-lg">Rating: ⭐{{ book?.rating?.average }}</p>
       <p class="text-lg">Published on: {{ book?.publishedDate }}</p>
       <p class="text-lg">Quantity: {{ book?.qty }}</p>
-      <p class="text-base mt-4 lg:w-3/5 w-[90%]">
+      <p class="text-base mt-4 lg:w-3/5 w-[90%] text-center lg:text-left">
         {{ book?.description }}
       </p>
-      <div class="flex flex-wrap gap-2 mt-4">
+      <p class="font-semibold">Tags:</p>
+      <div class="flex flex-wrap gap-2 lg:mt-4">
         <span
           v-for="(tag, index) in book?.tags"
           :key="tag"
@@ -30,7 +39,7 @@
           {{ tag }}
         </span>
       </div>
-      <div class="flex gap-4 mt-5">
+      <div class="flex lg:flex-row flex-col gap-4 mt-5">
         <!-- Tombol Back -->
         <button
           class="bg-teal-700 text-white rounded-md w-40 p-2 hover:bg-teal-800 hover:scale-95 hover:transition-transform"
@@ -49,6 +58,7 @@
       </div>
     </section>
   </main>
+  <Footer />
 </template>
 
 <script setup lang="ts">
@@ -56,9 +66,11 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Book } from "@/types/Book";
 import Navbar from "@/components/Navbar.vue";
+import Footer from "@/components/Footer.vue";
 
 const route = useRoute();
 const router = useRouter();
+const isLoading = ref(true);
 const book = ref<Book | null>(null);
 
 const tagColors = [
@@ -86,6 +98,13 @@ const fetchBookDetail = async () => {
       }
     );
 
+    if (response.status === 403) {
+      alert("Your session has expired. Please log in again.");
+      localStorage.removeItem("token");
+      router.push("/login");
+      return;
+    }
+
     if (!response.ok) {
       throw new Error("Failed to fetch book details.");
     }
@@ -93,10 +112,11 @@ const fetchBookDetail = async () => {
     book.value = await response.json();
   } catch (error) {
     alert("An error occurred while fetching book details.");
+  } finally {
+    isLoading.value = false;
   }
 };
 
-// Fungsi untuk menghapus buku
 const handleDelete = async () => {
   try {
     if (confirm("Are you sure you want to delete this book?")) {
@@ -109,6 +129,13 @@ const handleDelete = async () => {
           },
         }
       );
+
+      if (response.status === 403) {
+        alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("token");
+        router.push("/login");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error("Failed to delete the book.");

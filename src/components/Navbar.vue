@@ -1,6 +1,6 @@
 <template>
   <section
-    class="top-0 w-full fit flex items-center bg-teal-700 text-white p-5 px-5"
+    class="top-0 w-full fit flex items-center bg-teal-700 text-white p-5 px-5 mb-10"
   >
     <router-link to="/catalog" class="w-1/2 flex justify-start items-center">
       <h1 class="font-bold text-xl">PerpusIT</h1>
@@ -13,7 +13,7 @@
       </button>
 
       <div
-        class="p-5 w-40 h-fit bg-teal-600 text-white absolute right rounded-md drop-shadow-lg -bottom-24"
+        class="p-5 w-40 h-fit bg-teal-600 text-white absolute right rounded-md drop-shadow-lg -bottom-24 z-20"
         v-if="dropdownActive"
       >
         <button class="text-semibold" @click="logout">Logout</button>
