@@ -1,9 +1,19 @@
 <template>
   <Navbar />
   <main class="w-full min-h-screen flex-col items-center justify-center pt-20">
+    <button
+      @click="toggleForm"
+      class="mb-5 p-3 bg-green-500 text-white rounded hover:bg-green-700"
+    >
+      {{ showForm ? "Tutup Form Tambah Buku" : "Tambah Buku" }}
+    </button>
+
+    <AddBookForm v-if="showForm" />
+
     <h1 v-if="isLoading" class="font-bold text-xl text-center w-full">
       Loading...
     </h1>
+
     <section
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 w-full p-5 justify-items-center"
     >
@@ -34,10 +44,12 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Navbar from "@/components/Navbar.vue";
+import AddBookForm from "@/components/AddBookForm.vue";
 import type { Book } from "@/types/Book";
 
 const isLoading = ref(true);
 const books = ref<Book[]>([]);
+const showForm = ref(false);
 const router = useRouter();
 
 const fetchBooks = async () => {
@@ -69,6 +81,10 @@ const fetchBooks = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const toggleForm = () => {
+  showForm.value = !showForm.value;
 };
 
 const goToBookDetail = (_id: string) => {

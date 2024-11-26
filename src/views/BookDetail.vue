@@ -30,12 +30,23 @@
           {{ tag }}
         </span>
       </div>
-      <button
-        class="bg-teal-700 text-white rounded-md mt-5 w-40 p-2 hover:bg-teal-800 hover:scale-95 hover:transition-transform"
-        @click="goBack"
-      >
-        Back
-      </button>
+      <div class="flex gap-4 mt-5">
+        <!-- Tombol Back -->
+        <button
+          class="bg-teal-700 text-white rounded-md w-40 p-2 hover:bg-teal-800 hover:scale-95 hover:transition-transform"
+          @click="goBack"
+        >
+          Back
+        </button>
+
+        <!-- Tombol Delete -->
+        <button
+          class="bg-red-700 text-white rounded-md w-40 p-2 hover:bg-red-800 hover:scale-95 hover:transition-transform"
+          @click="handleDelete"
+        >
+          Delete
+        </button>
+      </div>
     </section>
   </main>
 </template>
@@ -82,6 +93,32 @@ const fetchBookDetail = async () => {
     book.value = await response.json();
   } catch (error) {
     alert("An error occurred while fetching book details.");
+  }
+};
+
+// Fungsi untuk menghapus buku
+const handleDelete = async () => {
+  try {
+    if (confirm("Are you sure you want to delete this book?")) {
+      const response = await fetch(
+        `https://pweb-express-mongodb-p07-2024.vercel.app/api/book/${route.params.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete the book.");
+      }
+
+      alert("Book deleted successfully!");
+      router.push("/catalog");
+    }
+  } catch (error) {
+    alert("Failed to delete the book. Please try again.");
   }
 };
 
